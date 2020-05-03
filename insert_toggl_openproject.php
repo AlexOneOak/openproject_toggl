@@ -1,10 +1,10 @@
 <?php
 /* CONFIGURATION */
-//Connection to DB
+//Connection to DB; defaults available at /etc/openproject/installer.dat
     $db_connect = pg_connect("host=localhost port=5432 dbname=DATABASE_NAME user=USER_DATABASE password=PASSWORD_DATABASE options='--client_encoding=UTF8'");
     //IDs of users inside OpenPoject
     $worker = array('xx', 'xx', 'xx');
-    //API_KEY of Toogl of each user 
+    //API_KEY of Toggl of each user in order
     $api_key = array('API_user1', 'API_user2', 'API_user3');
 
     //Change the number 3 with total of workers
@@ -40,7 +40,7 @@
                     curl_close($ch_project);
                     sleep(2);
 
-                    //Insert the project id of toogle inside identifier of Project inside OpenProject
+                    //Insert the project id of Toggl inside identifier of Project inside OpenProject
                     foreach($result_project as $row_project){
                         $project_name = $row_project->name;
                         $id_project = $row_project->id;
