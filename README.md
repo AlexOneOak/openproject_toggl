@@ -1,4 +1,4 @@
-# Integrate Toogl Entries with OpenProject
+# Integrate Toggl Entries with OpenProject
 PHP Script to insert Toggl entries inside OpenProject Modules
 
 Description:
