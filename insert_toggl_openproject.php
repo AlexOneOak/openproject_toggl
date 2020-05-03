@@ -2,7 +2,7 @@
 /* CONFIGURATION */
 //Connection to DB; defaults available at /etc/openproject/installer.dat
     $db_connect = pg_connect("host=localhost port=5432 dbname=DATABASE_NAME user=USER_DATABASE password=PASSWORD_DATABASE options='--client_encoding=UTF8'");
-    //IDs of users inside OpenPoject
+    //IDs of users inside OpenProject; access through database "users" table
     $worker = array('xx', 'xx', 'xx');
     //API_KEY of Toggl of each user in order
     $api_key = array('API_user1', 'API_user2', 'API_user3');
