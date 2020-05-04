@@ -1,17 +1,17 @@
 <?php
 /* CONFIGURATION */
-//Connection to DB; defaults available at /etc/openproject/installer.dat
-    $db_connect = pg_connect("host=localhost port=5432 dbname=DATABASE_NAME user=USER_DATABASE password=PASSWORD_DATABASE options='--client_encoding=UTF8'");
-    //IDs of users inside OpenProject; access through database "users" table
-    $worker = array('xx', 'xx', 'xx');
-    //API_KEY of Toggl of each user in order
-    $api_key = array('API_user1', 'API_user2', 'API_user3');
+//Connection to DB
+    $db_connect = pg_connect("host=localhost port=45432 dbname=DB_NAME user=DB_USER password=DB_PASS options='--client_encoding=UTF8'");
+    //IDs of users inside OpenPoject; 
+    $worker = array('2');
+    //API_KEY of Toggl of each user 
+    $api_key = array('API_KEY');
 
     //Change the number 3 with total of workers
     for ($x = 0; $x <= 3; $x++) {
 /* END CONFIGURATION */
 
-    //Get Toogl Entries
+    //Get Toggl Entries
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "https://www.toggl.com/api/v8/time_entries");
     curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -26,7 +26,7 @@
         if(!empty($row->description) && !empty($row->id) && !empty($row->pid)){
         $number_rows = pg_num_rows(pg_query($db_connect, "SELECT * FROM time_entries WHERE toggl_id='$row->id'"));
             if($number_rows == 0){
-                //Search the Project and if we don´t find it whe add toggl project id to identifier
+                //Search the Project and if we don't, find it when adding Toggl project id to identifier
                 $sql_pro_exist = pg_num_rows(pg_query($db_connect, "SELECT * FROM projects WHERE identifier LIKE '%{$row->pid}%'"));
                 if($sql_pro_exist == 0){
                     $ch_project = curl_init();
@@ -56,8 +56,8 @@
                     $row_id_pro = pg_fetch_assoc($sql_proyecto_open);
                     $project_id = $row_id_pro['id'];
 
-                    if($project_id){
-                        $sql_proyecto_modulo = pg_query($db_connect, "SELECT id FROM work_packages WHERE project_id = '{$project_id}' AND subject LIKE '%{$row->description}%'");
+                    if($project_id){		
+			$sql_proyecto_modulo = pg_query($db_connect, "SELECT id FROM work_packages WHERE project_id = '{$project_id}' AND subject LIKE '%{$row->description}%'");
                         $row_id_modul = pg_fetch_assoc($sql_proyecto_modulo);
                         $work_package_id = $row_id_modul['id'];
                     }
@@ -126,6 +126,16 @@
                         $sql_proyecto_modulo = pg_query($db_connect, "SELECT id FROM work_packages WHERE project_id = '{$project_id}' AND subject = '{$row->description}'");
                         $row_id_modul=pg_fetch_assoc($sql_proyecto_modulo);
                         $work_package_id = $row_id_modul['id'];
+			
+			//When using the Toggl timer button in OpenProject, each description is appended with the work package ID. This "if" statement takes advantage
+			//of that in order to properly assign Toggl entries to OpenProject work packages
+			if(empty($work_package_id)){
+				if(substr($row->description,0,4)=="[OP#"){
+					$id_string = explode("]",$row->description)[0];
+					$work_package_id = explode("#",$id_string)[1];
+					$row->description = explode("] ",$row->description)[1];
+				}
+			}
                     }
                     
                     if(!empty($project_id) && !empty($work_package_id)){
