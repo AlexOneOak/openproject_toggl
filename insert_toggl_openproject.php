@@ -153,7 +153,7 @@
                         $hours = round($minutes/60, 2);
                         $costs = '0.0000';
                         if ($hours > 0){
-                            $sql = "INSERT INTO time_entries (project_id, user_id, work_package_id, hours, activity_id, spent_on, tyear, tmonth, tweek, created_on, updated_on, costs, toggl_id) VALUES ('{$project_id}', '{$worker[$x]}', '{$work_package_id}', '{$hours}', '1', '{$date_toggl_entrie}', '{$ano}', '{$mes}', '{$week}', '{$date_now}', '{$date_now}', '{$costs}', '{$row->id}')";
+				$sql = "INSERT INTO time_entries (project_id, user_id, work_package_id, hours, comments, activity_id, spent_on, tyear, tmonth, tweek, created_on, updated_on, costs, toggl_id) VALUES ('{$project_id}', '{$worker[$x]}', '{$work_package_id}', '{$hours}', '{$row->description}', '1', '{$date_toggl_entrie}', '{$ano}', '{$mes}', '{$week}', '{$date_now}', '{$date_now}', '{$costs}', '{$row->id}')";
                             if (pg_query($db_connect, $sql)) {
 
                             } else {
