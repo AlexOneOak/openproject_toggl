@@ -13,7 +13,7 @@
 
     //Get Toggl Entries
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "https://www.toggl.com/api/v8/time_entries");
+    curl_setopt($ch, CURLOPT_URL, "https://api.track.toggl.com/api/v8/time_entries");
     curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
     curl_setopt($ch, CURLOPT_USERPWD, $api_key[$x] . ":api_token");
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -30,7 +30,7 @@
                 $sql_pro_exist = pg_num_rows(pg_query($db_connect, "SELECT * FROM projects WHERE identifier LIKE '%{$row->pid}%'"));
                 if($sql_pro_exist == 0){
                     $ch_project = curl_init();
-                    curl_setopt($ch_project, CURLOPT_URL, "https://www.toggl.com/api/v8/projects/" . $row->pid);
+                    curl_setopt($ch_project, CURLOPT_URL, "https://api.track.toggl.com/api/v8/time_entries" . $row->pid);
                     curl_setopt($ch_project, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
                     curl_setopt($ch_project, CURLOPT_USERPWD, $api_key[$x] . ":api_token");
                     curl_setopt($ch_project, CURLOPT_RETURNTRANSFER, true);
